@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sangam OS Smart Watch</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <link rel="icon" href="favicon.svg" />
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { motion, AnimatePresence } = Motion;
+
+        // APPS DATA
+        const APPS = [
+          { id: 'weather', name: 'Weather', icon: '☀️', bgColor: 'bg-gradient-to-br from-sky-400 to-blue-500' },
+          { id: 'music', name: 'Music', icon: '🎵', bgColor: 'bg-gradient-to-br from-pink-400 to-rose-500' },
+          { id: 'fitness', name: 'Fitness', icon: '💪', bgColor: 'bg-gradient-to-br from-green-400 to-emerald-500' },
+          { id: 'messages', name: 'Messages', icon: '💬', bgColor: 'bg-gradient-to-br from-purple-400 to-violet-500' },
+          { id: 'heart', name: 'Heart Rate', icon: '❤️', bgColor: 'bg-gradient-to-br from-red-400 to-pink-500' },
+          { id: 'settings', name: 'Settings', icon: '⚙️', bgColor: 'bg-gradient-to-br from-gray-400 to-slate-500' },
+        ];
+
+        // WATCH FRAME
+        function WatchFrame({ children, onCrown, onSideBtn }) {
+          return (
+            <div className="relative p-3 sm:p-4 bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-[50px] sm:rounded-[70px] shadow-[0_20px_80px_rgba(0,0,0,0.8)] border-2 border-zinc-700/50">
+              <div className="relative w-[280px] h-[340px] sm:w-[320px] sm:h-[390px] bg-black rounded-[40px] sm:rounded-[55px] overflow-hidden shadow-[inset_0_2px_20px_rgba(0,0,0,0.8)] ring-4 sm:ring-[6px] ring-black">
+                {children}
+              </div>
+              <button onClick={onCrown} className="absolute -right-1 top-16 sm:top-20 w-3 sm:w-4 h-12 sm:h-16 bg-gradient-to-r from-zinc-600 to-zinc-700 border-l-2 border-zinc-500 rounded-l-lg hover:from-zinc-500 hover:to-zinc-600 active:scale-95 transition-all shadow-lg">
+                <div className="w-full h-full flex flex-col justify-center items-center gap-[2px] opacity-40">
+                  <div className="w-[2px] h-[2px] bg-zinc-300 rounded-full" />
+                  <div className="w-[2px] h-[2px] bg-zinc-300 rounded-full" />
+                  <div className="w-[2px] h-[2px] bg-zinc-300 rounded-full" />
+                </div>
+              </button>
+              <button onClick={onSideBtn} className="absolute -right-1 top-36 sm:top-44 w-2 sm:w-3 h-16 sm:h-20 bg-gradient-to-r from-zinc-700 to-zinc-800 rounded-l-lg hover:from-zinc-600 hover:to-zinc-700 active:scale-95 transition-all shadow-lg" />
+              <div className="absolute -top-6 sm:-top-8 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-8 sm:h-10 bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-t-xl border-x-2 border-t-2 border-zinc-700/50" />
+              <div className="absolute -bottom-6 sm:-bottom-8 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-8 sm:h-10 bg-gradient-to-t from-zinc-800 to-zinc-900 rounded-b-xl border-x-2 border-b-2 border-zinc-700/50" />
+            </div>
+          );
+        }
+
+        // WEATHER APP
+        function WeatherApp() {
+          return (
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="absolute inset-0 bg-gradient-to-br from-sky-400 via-blue-500 to-blue-600 p-4 sm:p-6 flex flex-col">
+              <div className="text-white/90 text-[10px] sm:text-xs font-medium tracking-wide">TODAY</div>
+              <div className="flex-1 flex flex-col justify-center items-center">
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring" }} className="text-7xl sm:text-8xl mb-3 sm:mb-4">☀️</motion.div>
+                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="text-6xl sm:text-7xl font-bold text-white mb-2">24°</motion.div>
+                <div className="text-white/90 text-base sm:text-lg">Sunny & Clear</div>
+              </div>
+              <div className="flex justify-between text-white/80 text-xs">
+                <div className="flex flex-col items-center"><div className="text-xl sm:text-2xl mb-1">🌤️</div><div>26°</div></div>
+                <div className="flex flex-col items-center"><div className="text-xl sm:text-2xl mb-1">⛅</div><div>23°</div></div>
+                <div className="flex flex-col items-center"><div className="text-xl sm:text-2xl mb-1">🌧️</div><div>19°</div></div>
+                <div className="flex flex-col items-center"><div className="text-xl sm:text-2xl mb-1">⛈️</div><div>18°</div></div>
+              </div>
+            </motion.div>
+          );
+        }
+
+        // MUSIC APP
+        function MusicApp() {
+          const [isPlaying, setIsPlaying] = useState(false);
+          const [progress] = useState(45);
+          return (
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-500 to-red-600 p-4 sm:p-6 flex flex-col">
+              <div className="flex-1 flex items-center justify-center">
+                <motion.div initial={{ rotate: 0 }} animate={{ rotate: isPlaying ? 360 : 0 }} transition={{ duration: 3, repeat: isPlaying ? Infinity : 0, ease: "linear" }} className="w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br from-white/20 to-white/5 rounded-full flex items-center justify-center text-5xl sm:text-6xl backdrop-blur-sm border-4 border-white/30">🎵</motion.div>
+              </div>
+              <div className="text-center text-white mb-3 sm:mb-4">
+                <div className="font-bold text-base sm:text-lg mb-1">Summer Vibes</div>
+                <div className="text-xs sm:text-sm opacity-80">Artist Name</div>
+              </div>
+              <div className="mb-3 sm:mb-4">
+                <div className="h-1 bg-white/30 rounded-full overflow-hidden"><div className="h-full bg-white rounded-full transition-all duration-300" style={{ width: `${progress}%` }} /></div>
+                <div className="flex justify-between text-[10px] sm:text-xs text-white/70 mt-1"><span>1:23</span><span>3:05</span></div>
+              </div>
+              <div className="flex justify-center items-center gap-4 sm:gap-6">
+                <button className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl backdrop-blur-sm hover:bg-white/30 active:scale-95 transition-all">⏮️</button>
+                <button onClick={() => setIsPlaying(!isPlaying)} className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center text-2xl sm:text-3xl hover:scale-105 active:scale-95 transition-all shadow-lg">{isPlaying ? '⏸️' : '▶️'}</button>
+                <button className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl backdrop-blur-sm hover:bg-white/30 active:scale-95 transition-all">⏭️</button>
+              </div>
+            </motion.div>
+          );
+        }
+
+        // FITNESS APP
+        function FitnessApp() {
+          return (
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="absolute inset-0 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 p-4 sm:p-6 flex flex-col">
+              <div className="text-white/90 text-[10px] sm:text-xs font-medium tracking-wide mb-4 sm:mb-6">TODAY'S ACTIVITY</div>
+              <div className="flex-1 flex items-center justify-center relative">
+                <svg className="w-40 h-40 sm:w-48 sm:h-48 -rotate-90">
+                  <circle cx="96" cy="96" r="85" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12" />
+                  <motion.circle cx="96" cy="96" r="85" fill="none" stroke="white" strokeWidth="12" strokeDasharray={534} strokeDashoffset={534 - (534 * 0.75)} strokeLinecap="round" initial={{ strokeDashoffset: 534 }} animate={{ strokeDashoffset: 534 - (534 * 0.75) }} transition={{ duration: 1, delay: 0.2 }} />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center flex-col text-white">
+                  <div className="text-4xl sm:text-5xl font-bold">8547</div>
+                  <div className="text-[10px] sm:text-xs opacity-80 mt-1">STEPS</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-2 sm:p-3 text-center">
+                  <div className="text-xl sm:text-2xl mb-1">🔥</div>
+                  <div className="text-white font-bold text-xs sm:text-sm">423</div>
+                  <div className="text-white/70 text-[9px] sm:text-[10px]">CAL</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-2 sm:p-3 text-center">
+                  <div className="text-xl sm:text-2xl mb-1">📍</div>
+                  <div className="text-white font-bold text-xs sm:text-sm">6.2</div>
+                  <div className="text-white/70 text-[9px] sm:text-[10px]">KM</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-2 sm:p-3 text-center">
+                  <div className="text-xl sm:text-2xl mb-1">⏱️</div>
+                  <div className="text-white font-bold text-xs sm:text-sm">45</div>
+                  <div className="text-white/70 text-[9px] sm:text-[10px]">MIN</div>
+                </div>
+              </div>
+            </motion.div>
+          );
+        }
+
+        // MESSAGES APP
+        function MessagesApp() {
+          const messages = [
+            { id: 1, sender: 'Mom', text: 'Don\'t forget dinner tonight!', time: '2m ago', unread: true },
+            { id: 2, sender: 'Alex', text: 'Meeting at 3pm?', time: '15m ago', unread: true },
+            { id: 3, sender: 'Sarah', text: 'Thanks for the help!', time: '1h ago', unread: false },
+          ];
+          return (
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="absolute inset-0 bg-gradient-to-br from-purple-500 via-violet-500 to-indigo-600 p-4 sm:p-6 flex flex-col">
+              <div className="text-white/90 text-[10px] sm:text-xs font-medium tracking-wide mb-3 sm:mb-4">MESSAGES</div>
+              <div className="flex-1 space-y-2 sm:space-y-3 overflow-y-auto">
+                {messages.map((msg, index) => (
+                  <motion.div key={msg.id} initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: index * 0.1 }} className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 relative">
+                    {msg.unread && <div className="absolute top-2 sm:top-3 right-2 sm:right-3 w-2 h-2 bg-red-400 rounded-full" />}
+                    <div className="text-white font-semibold text-xs sm:text-sm mb-1">{msg.sender}</div>
+                    <div className="text-white/80 text-[11px] sm:text-xs mb-1 sm:mb-2">{msg.text}</div>
+                    <div className="text-white/50 text-[9px] sm:text-[10px]">{msg.time}</div>
+                  </motion.div>
+                ))}
+              </div>
+              <button className="mt-3 sm:mt-4 bg-white/20 backdrop-blur-sm text-white rounded-full py-2 sm:py-3 font-medium text-xs sm:text-sm hover:bg-white/30 active:scale-95 transition-all">Reply</button>
+            </motion.div>
+          );
+        }
+
+        // HEART RATE APP
+        function HeartRateApp() {
+          const [isMonitoring, setIsMonitoring] = useState(true);
+          return (
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="absolute inset-0 bg-gradient-to-br from-red-500 via-pink-500 to-rose-600 p-4 sm:p-6 flex flex-col">
+              <div className="text-white/90 text-[10px] sm:text-xs font-medium tracking-wide">HEART RATE</div>
+              <div className="flex-1 flex flex-col items-center justify-center">
+                <motion.div animate={{ scale: isMonitoring ? [1, 1.1, 1] : 1 }} transition={{ duration: 0.8, repeat: isMonitoring ? Infinity : 0 }} className="text-7xl sm:text-8xl mb-4 sm:mb-6">❤️</motion.div>
+                <div className="text-white text-center">
+                  <div className="text-6xl sm:text-7xl font-bold mb-2">72</div>
+                  <div className="text-base sm:text-lg opacity-90">BPM</div>
+                </div>
+                <div className="mt-6 sm:mt-8 text-white/80 text-xs sm:text-sm">{isMonitoring ? 'Monitoring...' : 'Paused'}</div>
+              </div>
+              <div className="h-14 sm:h-16 bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden flex items-center justify-center">
+                <svg className="w-full h-10 sm:h-12" viewBox="0 0 200 50">
+                  <motion.path d="M0,25 Q10,25 20,15 T40,25 T60,15 T80,25 T100,15 T120,25 T140,15 T160,25 T180,15 T200,25" fill="none" stroke="white" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2, repeat: Infinity }} />
+                </svg>
+              </div>
+              <button onClick={() => setIsMonitoring(!isMonitoring)} className="mt-3 sm:mt-4 bg-white text-red-500 rounded-full py-2 sm:py-3 font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all shadow-lg">{isMonitoring ? 'Pause' : 'Start'} Monitoring</button>
+            </motion.div>
+          );
+        }
+
+        // SETTINGS APP
+        function SettingsApp() {
+          const [brightness, setBrightness] = useState(75);
+          const [notifications, setNotifications] = useState(true);
+          return (
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="absolute inset-0 bg-gradient-to-br from-gray-700 via-slate-700 to-zinc-800 p-4 sm:p-6 flex flex-col">
+              <div className="text-white/90 text-[10px] sm:text-xs font-medium tracking-wide mb-4 sm:mb-6">SETTINGS</div>
+              <div className="flex-1 space-y-3 sm:space-y-4 overflow-y-auto">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4">
+                  <div className="flex justify-between items-center mb-2 sm:mb-3">
+                    <div className="text-white font-medium text-xs sm:text-sm">Brightness</div>
+                    <div className="text-white/70 text-xs sm:text-sm">{brightness}%</div>
+                  </div>
+                  <input type="range" min="0" max="100" value={brightness} onChange={(e) => setBrightness(Number(e.target.value))} className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-pointer" style={{ background: `linear-gradient(to right, white ${brightness}%, rgba(255,255,255,0.2) ${brightness}%)` }} />
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="text-white font-medium text-xs sm:text-sm mb-1">Notifications</div>
+                      <div className="text-white/60 text-[10px] sm:text-xs">Receive alerts</div>
+                    </div>
+                    <button onClick={() => setNotifications(!notifications)} className={`w-11 h-6 sm:w-12 sm:h-7 rounded-full transition-all ${notifications ? 'bg-green-500' : 'bg-white/20'} relative`}>
+                      <motion.div className="w-4 h-4 sm:w-5 sm:h-5 bg-white rounded-full absolute top-1" animate={{ left: notifications ? '24px' : '4px' }} transition={{ type: "spring", stiffness: 500, damping: 30 }} />
+                    </button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  <button className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center hover:bg-white/20 active:scale-95 transition-all">
+                    <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">🔋</div>
+                    <div className="text-white text-[10px] sm:text-xs font-medium">Battery</div>
+                  </button>
+                  <button className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center hover:bg-white/20 active:scale-95 transition-all">
+                    <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">📶</div>
+                    <div className="text-white text-[10px] sm:text-xs font-medium">Network</div>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          );
+        }
+
+        // HOME SCREEN
+        function HomeScreen({ setActiveApp, currentTime }) {
+          const timeStr = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+          const dateStr = currentTime.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+          return (
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-black">
+              <div className="absolute top-0 left-0 right-0 flex justify-between items-center px-4 sm:px-6 py-2 sm:py-3 text-white/60 text-[9px] sm:text-[10px]">
+                <div className="flex items-center gap-1"><span>📶</span><span className="font-medium">LTE</span></div>
+                <div className="flex items-center gap-1"><span>🔋</span><span className="font-medium">87%</span></div>
+              </div>
+              <div className="absolute top-12 sm:top-16 left-0 right-0 text-center px-4 sm:px-6">
+                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
+                  <div className="text-6xl sm:text-7xl font-bold text-white tracking-tight mb-1 sm:mb-2">{timeStr}</div>
+                  <div className="text-xs sm:text-sm text-blue-400 font-medium tracking-wider uppercase">{dateStr}</div>
+                </motion.div>
+              </div>
+              <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
+                <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                  {APPS.map((app, index) => (
+                    <motion.button key={app.id} initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.1 + (index * 0.05), type: "spring", stiffness: 400, damping: 15 }} onClick={() => setActiveApp(app.id)} className={`aspect-square ${app.bgColor} rounded-2xl sm:rounded-3xl flex flex-col items-center justify-center text-white hover:scale-105 active:scale-95 transition-transform shadow-lg`}>
+                      <div className="text-3xl sm:text-4xl mb-0.5 sm:mb-1">{app.icon}</div>
+                      <div className="text-[9px] sm:text-[10px] font-medium opacity-90 px-1">{app.name}</div>
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        // MAIN APP
+        function App() {
+          const [status, setStatus] = useState('on');
+          const [activeApp, setActiveApp] = useState(null);
+          const [currentTime, setCurrentTime] = useState(new Date());
+
+          useEffect(() => {
+            const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+            return () => clearInterval(timer);
+          }, []);
+
+          const togglePower = () => {
+            if (status === 'on') {
+              setStatus('off');
+              setActiveApp(null);
+            } else {
+              setStatus('booting');
+              setTimeout(() => setStatus('on'), 2500);
+            }
+          };
+
+          const handleCrown = () => {
+            if (status === 'on') setActiveApp(null);
+          };
+
+          const renderApp = () => {
+            switch (activeApp) {
+              case 'weather': return <WeatherApp />;
+              case 'music': return <MusicApp />;
+              case 'fitness': return <FitnessApp />;
+              case 'messages': return <MessagesApp />;
+              case 'heart': return <HeartRateApp />;
+              case 'settings': return <SettingsApp />;
+              default: return <HomeScreen setActiveApp={setActiveApp} currentTime={currentTime} />;
+            }
+          };
+
+          return (
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-2 sm:p-4">
+              <WatchFrame onCrown={handleCrown} onSideBtn={togglePower}>
+                <AnimatePresence mode="wait">
+                  {status === 'booting' && (
+                    <motion.div key="boot" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black flex flex-col items-center justify-center z-50">
+                      <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 360] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-blue-500 border-t-transparent rounded-full mb-4 sm:mb-6" />
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 text-lg sm:text-xl font-bold tracking-[6px] sm:tracking-[8px]">SANGAM</motion.div>
+                      <motion.div initial={{ width: 0 }} animate={{ width: "60%" }} transition={{ duration: 2, delay: 0.5 }} className="h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-3 sm:mt-4" />
+                    </motion.div>
+                  )}
+                  {status === 'on' && (
+                    <motion.div key={activeApp || 'home'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="absolute inset-0">{renderApp()}</motion.div>
+                  )}
+                  {status === 'off' && (
+                    <motion.div key="off" initial={{ opacity: 1 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-black" />
+                  )}
+                </AnimatePresence>
+              </WatchFrame>
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
